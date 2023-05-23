@@ -54,15 +54,20 @@ int main(){
 	  }
 	}
 
-	//add a connection between the two nodes
-	
-	
+	//add connection and distance between two nodes
 	if(node1 != NULL &&
 	   node2 != NULL){//both points exist
 	  int weight;
-	  cout << "Enter the weight of the edge" << endl;
+	  cout << "Enter the distance between the points:" << endl;
 	  cin >> weight;
-	  
+
+	  //add connection
+	  node1->addConnection(node2);
+	  node2->addConnection(node1);
+
+	  //add weight
+	  node1->addWeight(weight);
+	  node2->addWeight(weight);
 	  
 	  
 	  
