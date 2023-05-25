@@ -27,13 +27,13 @@ int Node::getWeight(Node* endPt){
     //find the point it is connected to
     //find the index of this point
     if((*ptr) == endPt){
-      break; 
+      return weightList[index]; 
     }
     index++;
   }
 
   //find corresponding index of weightList
-  return weightList[index];
+  return 0;
   
 }
 
