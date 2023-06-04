@@ -14,7 +14,8 @@ class Node{
   int getWeight(Node* endPt);
   void addWeight(int w);
   void addConnection(Node* connecting);
-  
+  void deleteConnection(Node* deleting);
+  void deleteWeight(int index);  
   
 
  private:

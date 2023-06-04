@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iterator>
 #include <vector>
 #include "Node.h"
 
@@ -38,5 +39,33 @@ int Node::getWeight(Node* endPt){
 }
 
 void Node::addConnection(Node* connecting){
-  connectList.push_back(connecting);
+ connectList.push_back(connecting);
 }
+
+
+void Node::deleteConnection(Node* deleting){
+cout << "deleting connection" << endl;
+ vector<Node*>::iterator ptr;
+ int index = 0;
+ bool connection = false;
+ for(ptr = connectList.begin(); ptr < connectList.end(); ptr++){
+   if((*ptr) == deleting){
+     connection = true;
+     connectList.erase(connectList.begin() + index);
+     break;
+   }else{
+    index++;
+  }
+ }
+cout << "index: " << index << endl;
+  if(connection == true){
+    deleteWeight(index);
+  }
+
+}
+
+void Node::deleteWeight(int index){
+cout << "deleting weight" << endl;
+   weightList.erase(weightList.begin() + index);//removes 
+}
+

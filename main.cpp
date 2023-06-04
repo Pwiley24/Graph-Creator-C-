@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iterator>
 #include <vector>
 #include <cstring>
 #include "Node.h"
@@ -101,19 +102,53 @@ int main(){
 	cin >> name;
 	cin.ignore(5, '\n');
 
+        int index = 0;
 	vector<Node*>::iterator ptr;
 	for(ptr = pointList.begin(); ptr < pointList.end(); ptr++){
-	  if((*ptr)->getValue() == name){
+	  if((*ptr)->getPoint() == name){
 	    deleting = (*ptr);
-	  }
+            pointList.erase(pointList.begin() + index);
+	  }else{
+            ++index;
+          }
 	}
 
 	if(deleting != NULL){
-	  deleteVertex();//start here
-	}
+          //remove a connection from each node in remaining points
+          vector<Node*>::iterator ptr;
+          for(ptr = pointList.begin(); ptr < pointList.end(); ptr++){
+	     (*ptr)->deleteConnection(deleting);
+          }
+        }else{
+          cout << "No point found." << endl;
+        }
 	
       }else if(strcmp(input, "EDGE") == 0){
-	deleteEdge();
+        char name1;
+        Node* point1 = NULL;
+        char name2;
+        Node* point2 = NULL;
+        cout << "Enter the first Vertex" << endl;
+        cin >> name1;
+        cin.ignore(5, '\n');
+        cout << "Enter the second Vertex" << endl;
+        cin >> name2;
+        cin.ignore(5, '\n');
+     
+        vector<Node*>::iterator ptr;
+        for(ptr = pointList.begin(); ptr < pointList.end(); ptr++){
+           if((*ptr)->getPoint() == name1){
+             point1 = (*ptr);
+           }else if((*ptr)->getPoint() == name2){
+             point2 = (*ptr);
+           }
+        }
+
+        if(point1 != NULL &&
+           point2 != NULL){//both given points exist
+          point1->deleteConnection(point2);
+          point2->deleteConnection(point1);
+        }
       }
     }
     
