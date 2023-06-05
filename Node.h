@@ -16,13 +16,19 @@ class Node{
   void addConnection(Node* connecting);
   void deleteConnection(Node* deleting);
   void deleteWeight(int index);  
+  void setDistance(int num);
+  int getDistance();
+  void setPrevious(Node* prev);
+  Node* getPrevious();
+  vector<Node*> getConnection();
   
 
  private:
   char point;
   vector<Node*> connectList;
   vector<int> weightList;
-
+  int distance;
+  Node* previous;
 };
 
 #endif

@@ -1,12 +1,21 @@
+//This project creates a graph of nodes.
+//You can add edges and vertexs that are connected by weights.
+//This program can calculate the shortest path between two nodes and
+//display the path and the distance traveled.
+//Author: Paige Wiley
+//Date: 06-05-23
+
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include <limits.h>
 #include <cstring>
 #include "Node.h"
 
 using namespace std;
 
 void printMatrix(vector<Node*> pointList);
+void findShortest(Node* source, Node* endpt, vector<Node*> pointList);
 
 int main(){
   bool running = true;
@@ -14,7 +23,7 @@ int main(){
 
   while(running){
     char input[10];
-    cout << "Enter a command (ADD, PRINT, QUIT)" << endl;
+    cout << "Enter a command (ADD, PRINT, DELETE, TRAVEL, QUIT)" << endl;
     cin.get(input, 10);
     cin.ignore(10, '\n');
 
@@ -150,13 +159,140 @@ int main(){
           point2->deleteConnection(point1);
         }
       }
+    }else if(strcmp(input, "TRAVEL") == 0){//finding the shortest path
+      Node* source = NULL;
+      char sourceName;
+      Node* endpt = NULL;
+      char endName;
+      cout << "Enter the source point" << endl;
+      cin >> sourceName;
+      cin.ignore(5, '\n');
+
+      cout << "Enter the end point" << endl;
+      cin >> endName;
+      cin.ignore(5, '\n');
+
+      vector<Node*>::iterator ptr;
+      for(ptr = pointList.begin(); ptr < pointList.end(); ptr++){
+	if((*ptr)->getPoint() == sourceName){
+	  source = (*ptr);
+	}else if((*ptr)->getPoint() == endName){
+	  endpt = (*ptr);
+	}
+      }
+      if(source != NULL &&
+	 endpt != NULL){
+	//find the shortest path from source to all other vertexes.
+	findShortest(source, endpt, pointList);
+      }else{
+	cout << "No known vertex in graph" << endl;
+      }
+
+    }
+  }
+  return 0;
+}
+
+
+/*
+ *
+ */
+void findShortest(Node* source, Node* endpt, vector<Node*> pointList){
+  vector<Node*> visited;
+  visited.push_back(source);
+  vector<Node*> unvisited;
+  vector<Node*> path;
+  
+  
+  //set all nodes to a distance of 0 (this is infinity) and assign unvisited
+  source->setDistance(0);
+  vector<Node*>::iterator ptr;
+  for(ptr = pointList.begin(); ptr < pointList.end(); ptr++){
+    if((*ptr) != source){
+      cout << "point " << (*ptr)->getPoint() << endl;
+      (*ptr)->setDistance(INT_MAX);
+      unvisited.push_back((*ptr));
+    }
+  }
+
+  Node* current = source;
+  while(unvisited.empty() == false){//while unvisited is not empty
+    if(current != source){
+      current = unvisited[0];
+    }
+    cout << "current: " << current->getPoint() << endl;
+    vector<Node*> connectList;
+    connectList = current->getConnection();
+    vector<Node*>::iterator ptr;
+    for(ptr = connectList.begin(); ptr < connectList.end(); ptr++){
+      //set the distance
+      cout << "connectino: " << (*ptr)->getPoint() << endl;
+      if(current->getWeight((*ptr)) + current->getDistance() < (*ptr)->getDistance()){
+	(*ptr)->setDistance(current->getDistance() + current->getWeight((*ptr)));
+	(*ptr)->setPrevious(current);
+      }
+      cout << "point's weight " << (*ptr)->getDistance() << endl;
+    }
+
+    
+    
+    if(current != source){
+      //remove from unvisited and move to visited
+      visited.push_back(current);
+      vector<Node*>::iterator ptr;
+      int index = 0;
+      for(ptr = unvisited.begin(); ptr < unvisited.end(); ptr++){
+	if((*ptr) == current){
+	  unvisited.erase(unvisited.begin() + index);
+	}
+	index++;
+      }
+    }else{
+      current = unvisited[0];
     }
     
+  }
+  source->setDistance(0);
+
+  if(endpt->getDistance() == INT_MAX){
+    cout << "No connection between points" << endl;
+  }else{
+    current = endpt;
+    while(current->getPrevious() != NULL){
+      path.insert(path.begin(), current);
+      if(current->getPrevious() != NULL){
+	current = current->getPrevious();
+      }else{
+	current = NULL;
+      }
+    }
+    path.insert(path.begin(), source);
+    cout << "Distance: " << endpt->getDistance() << endl;
+
+    //print out the path:
+    vector<Node*>::iterator pa;
+    cout << "Path: ";
+    for(pa = path.begin(); pa < path.end(); pa++){
+      cout << (*pa)->getPoint() << " ";
+    }
+    
+    cout << " " << endl;
 
   }
+
+  
+  
+  //reset all points to infinity:
+  vector<Node*>::iterator i;
+  for(i = pointList.begin(); i < pointList.end(); i++){
+    (*i)->setDistance(INT_MAX);
+  }
+ 
+  
   
 
-  return 0;
+  
+  
 }
 
 
