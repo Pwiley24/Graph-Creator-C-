@@ -232,6 +232,9 @@ void findShortest(Node* source, Node* endpt, vector<Node*> pointList){
 	(*ptr)->setPrevious(current);
       }
       cout << "point's weight " << (*ptr)->getDistance() << endl;
+
+     
+
     }
 
     
@@ -252,9 +255,10 @@ void findShortest(Node* source, Node* endpt, vector<Node*> pointList){
     }
     
   }
+  cout << "exit while loop" << endl;
   source->setDistance(0);
 
-  if(endpt->getDistance() == INT_MAX){
+  if(endpt->getDistance() < 0){
     cout << "No connection between points" << endl;
   }else{
     current = endpt;
